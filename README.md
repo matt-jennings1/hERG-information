@@ -1,7 +1,7 @@
 # hERG-information
 Code for generating synthetic IKr curves for a range of voltage protocols, and subsequently deriving information-theoretic metrics used to appraise their efficacy. Some results are included, but not all of the raw data (e.g. simulated current curves) due to file size considerations.
 
-# PRE-REQUISITES
+# Pre-requisites
 
 The majority of the code is written in Python 3, and requires `numpy`, `scipy`, and `scikit-learn`. `matplotlib` is used for producing figures. Additionally, `NPEET` (https://github.com/gregversteeg/NPEET) was used for its implementation of the CMI estimator described in the paper.
 
@@ -13,11 +13,11 @@ These instructions primarily consider Linux users; users of a different OS will 
 
 In its current state, the framework requires the execution of several programs, rather than one large program/script. A step-by-step guide to each of the programs is provided:
 
-1. Run `gen_params.py`, specifying the desired number of samples and directory name with the `n_desired` and `tag` variables, to randomly sample parameter values from the prior. By default, 10,000 samples will be created in `./output/10000_Alpha`. The file structure creates a subfolder for each sample within this directory, wherein the parameter samples and each of the simulated IKr curves will be saved.
+1. Run `gen_params.py`, specifying the desired number of samples and directory name with the `n_desired` and `tag` variables, to randomly sample parameter values from the prior. By default, 10,000 samples will be created in `./output/10000_Alpha_params`. The file structure creates a subfolder for each sample within this directory, wherein the parameter samples and each of the simulated IKr curves will be saved.
 
 2. Compile `HHFullOut` using the provided Makefile (you may have to edit this to link to your SUNDIALS install directory. Run `run_model.py`, which by default will simulate results for all seven protocols (this will take a long time!). Since each CVODE instance runs on one core, this is easily parallelisable by modifying the code so that there are multiple executables, and multiple input/output file names to prevent conflicts
 
-**Note:** Typically, the solver returns an error for a handful of parameters in each set of 10,000. This corresponds with extreme or 'unrealistic' values being sampled for that subset of parameters. It is necessary to re-sample the parameters and re-run the model for all protocols for those re-sampled subsets, to ensure all protocols run on the sample dataset. For small numbers of errors this can easily and quickly be done manually, but if for whatever reason a large number of errors have occurred (such as by altering the prior or protocol), `gen_params.py` can be modified to accomplish this by iterating through a list of failed samples. Should any of the new samples also fail, they will have to be re-sampled once more.
+**Note:** Usually the solver will return an error for a handful (typically ~0.05% error rate) of parameters in each set of 10,000. This corresponds with extreme or 'unrealistic' values being sampled for that subset of parameters. It is necessary to re-sample the parameters and re-run the model for all protocols for those re-sampled subsets, to ensure all protocols run on the sample dataset. For small numbers of errors this can easily and quickly be done manually, but if for whatever reason a large number of errors have occurred (such as by altering the prior or protocol), `gen_params.py` can be modified to accomplish this by iterating through a list of failed samples. Should any of the new samples also fail, they will have to be re-sampled once more.
 
 3. Next, use `PCA_DR.py` to apply the PC decomposition and dimensionality reduction. This will save the PCs (modes), and the PC scores for each sample.
 
