@@ -20,8 +20,7 @@ def main(n_desired=1000, tag=''):
         params, numgen = prior.sample(int(1e7))
 
         for i in range(numgen):
-            os.mkdir(dirname+'sample_'+str(n_tot)+'/')
-            np.savetxt(dirname+'sample_'+str(n_tot)+'/'+'params_'+str(n_tot)+'.txt', params[:,i])
+            np.save(dirname+'params_'+str(n_tot)+'.npy', params[:,i])
             n_tot += 1
             if n_tot == n_desired:
                 break
