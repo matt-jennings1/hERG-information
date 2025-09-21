@@ -16,7 +16,8 @@ def main(PR=7, n=1000,tag=''):
 #Copies the parameter sets into local directory and solves them. Results moved back to
 #appropriate sample directory.
     for x in range(n):
-        os.system('cp output/'+str(n)+str(tag)+'_params/sample_'+str(x)+'/params_'+str(x)+'.txt input.txt')
+        params = np.load('./output/'+str(n)+str(tag)+'_params/params_'+str(x)+'.npy')
+        np.savetxt('./input.txt', params)
         subprocess.run('./HHFullOut')
         temp = np.loadtxt('hh.out') 
         
@@ -32,4 +33,4 @@ def main(PR=7, n=1000,tag=''):
 if __name__ == '__main__':
     
     for x in range(1,8):
-        main(PR=x, n=10000, tag='_Alpha')
+        main(PR=x, n=100, tag='_Alpha')
